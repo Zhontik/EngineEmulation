@@ -21,16 +21,12 @@ namespace EngineEmulate
             {
                 time++;
                 InstSpeed += engine.Accelerate(InstSpeed);
-                if (InstSpeed > engine.maxSpeed)
+                if (engine.Cold(Tout - InstTemp) + engine.Heat(engine.maxSpeed) <= 0.00001d)
                 {
-                    InstSpeed = engine.maxSpeed;
-                    if (engine.Cold(Tout - InstTemp) + engine.Heat(engine.maxSpeed) <= 0.000000001d)
-                    {
-                        return -1;
-                    }
+                    return -1;
                 }
                 InstTemp += engine.Heat(InstSpeed) + engine.Cold(Tout - InstTemp);
-                //Console.WriteLine($"Время:{time} Скорость:{InstSpeed} Темппература:{InstTemp}");
+                Console.WriteLine($"Время:{time} Скорость:{InstSpeed} Темппература:{InstTemp}");
             }
             return time;
         }

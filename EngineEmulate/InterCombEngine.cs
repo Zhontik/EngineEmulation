@@ -8,15 +8,19 @@ namespace EngineEmulate
         private float I;
         private int[] M;
         private int[] V;
-        public int Toverheat;
-        private float HeatMomentum;
-        private float HeatVelocity;
-        private float ColdTemp;
+        private int toverheat;
+        public int Toverheat => toverheat;
+        private float heatMomentum;
+        private float heatVelocity;
+        private float coldTemp;
 
-        private int Mnow;
+
+        private float tnow;
+        public float Tnow => tnow;
+        private float Mnow;
         public int maxSpeed;
 
-        public InterCombEngine(float I, int[] M, int[] V, int Toverheat, float HeatMomentum, float HeatVelocity, float ColdTemp)
+        public InterCombEngine(float I, int[] M, int[] V, int toverheat, float heatMomentum, float heatVelocity, float coldTemp)
         {
             this.I = (I < 1) ? 1 : I;
             for (int i = 0; i < M.Length; i++)
@@ -28,35 +32,46 @@ namespace EngineEmulate
             }
             this.M = M;
             this.V = V;
-            this.Toverheat = Toverheat;
-            this.HeatMomentum = (HeatMomentum < 0) ? 0 : HeatMomentum;
-            this.HeatVelocity = (HeatVelocity < 0) ? 0 : HeatVelocity;
-            this.ColdTemp = (ColdTemp < 0) ? 0 : ColdTemp;
+            this.toverheat = toverheat;
+            this.heatMomentum = (heatMomentum < 0) ? 0 : heatMomentum;
+            this.heatVelocity = (heatVelocity < 0) ? 0 : heatVelocity;
+            this.coldTemp = (coldTemp < 0) ? 0 : coldTemp;
             maxSpeed = V[V.Length - 1];
             Mnow = M[0];
         }
 
         public double Heat(float v)
         {
-            return Mnow * HeatMomentum + v * v * HeatVelocity;
+            //Console.WriteLine($"{Mnow} {heatMomentum} {heatVelocity}");
+            return Mnow * heatMomentum + v * v * heatVelocity;
         }
 
-        public double Cold(double TSubst)
+        public double Cold(double TSubstracted)
         {
-            return ColdTemp * TSubst;
+
+            return coldTemp * TSubstracted;
         }
 
         public float Accelerate(float v)
         {
-            int i;
-            for (i = 0; i < V.Length; i++)
+            
+            if(v > maxSpeed)
             {
-                if (v > V[i])
-                {
-                    Mnow = M[i];
-                }
+                Mnow = M[M.Length - 1];
+                return Mnow / I;
             }
-            return Mnow / I;
+
+            int i = 0;
+            while(v >= V[i])
+            {
+                i++;
+            }
+
+            // estimate momentum using linear function
+            float k = (M[i] - M[i - 1]) / (V[i] - V[i - 1]);
+            float c = M[i] - k * V[i];
+            Mnow = k * v + c;
+            return Mnow/I;
         }
 
         public void Info()
@@ -72,10 +87,10 @@ namespace EngineEmulate
             {
                 Console.Write(V[i] + " ");
             }
-            Console.WriteLine($"\nТемпература перегрева: {Toverheat}");
-            Console.WriteLine($"Коэффициент передачи тепла от момента: {HeatMomentum}");
-            Console.WriteLine($"Коэффициент передачи тепла от скорости: {HeatVelocity}");
-            Console.WriteLine($"Коэффициент охлаждения: {ColdTemp}");
+            Console.WriteLine($"\nТемпература перегрева: {toverheat}");
+            Console.WriteLine($"Коэффициент передачи тепла от момента: {heatMomentum}");
+            Console.WriteLine($"Коэффициент передачи тепла от скорости: {heatVelocity}");
+            Console.WriteLine($"Коэффициент охлаждения: {coldTemp}");
         }
     }
 }
