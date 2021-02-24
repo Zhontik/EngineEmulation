@@ -6,29 +6,46 @@
 
 namespace EngineEmulate
 {
-    class TestStand
+    class OverheatTestStand : ITestStand
     {
-        public int Start(int Tout, InterCombEngine engine)
+        public void StartEngineTesting(int outTemperature, IEngine engine)
         {
-            if (Tout >= engine.Toverheat)
-            {
-                return 0;
-            }
-            float InstSpeed = 0;
-            double InstTemp = Tout;
             int time = 0;
-            while (InstTemp < engine.Toverheat)
+            if (engine.temperatureOverheat > outTemperature)
             {
-                time++;
-                InstSpeed += engine.Accelerate(InstSpeed);
-                if (engine.Cold(Tout - InstTemp) + engine.Heat(engine.maxSpeed) <= 0.00001d)
+                double temperatureLast = outTemperature; 
+                while (engine.tnow < engine.temperatureOverheat)
                 {
-                    return -1;
+                    time++;
+                    engine.TimeStep(outTemperature);
+                    Console.WriteLine($"Время:{time} Предыдущая:{temperatureLast} Темппература:{engine.tnow}");
+
+                    if (engine.tnow - temperatureLast <= 0.00001d)
+                    {
+                        time = -1;
+                        break;
+                    }
+                    temperatureLast = engine.tnow;
                 }
-                InstTemp += engine.Heat(InstSpeed) + engine.Cold(Tout - InstTemp);
-                Console.WriteLine($"Время:{time} Скорость:{InstSpeed} Темппература:{InstTemp}");
             }
-            return time;
+            PrintResults(time);
+        }
+
+
+        private void PrintResults(int result)
+        {
+            if (result < 0)
+            {
+                Console.WriteLine("Двигатель не перегревается или его скорость перегрева критически мала.");
+            }
+            else if (result == 0)
+            {
+                Console.WriteLine($"Двигатель перегрет изначально.");
+            }
+            else
+            {
+                Console.WriteLine($"Двигатель перегревается через {result} сек.");
+            }
         }
     }
 }
