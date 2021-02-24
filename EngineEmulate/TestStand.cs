@@ -18,7 +18,7 @@ namespace EngineEmulate
                 {
                     time++;
                     engine.TimeStep(outTemperature);
-                    Console.WriteLine($"Время:{time} Предыдущая:{temperatureLast} Темппература:{engine.tnow}");
+                    //Console.WriteLine($"Время:{time} Предыдущая:{temperatureLast} Темппература:{engine.tnow}");
 
                     if (engine.tnow - temperatureLast <= 0.00001d)
                     {

@@ -81,7 +81,7 @@ namespace EngineEmulate
 
             Accelerate();
             tnow += Heat(instantSpeed) + Cold(outTemperature - tnow);
-            Console.WriteLine($"speed:{instantSpeed} Темппература:{tnow}");
+            //Console.WriteLine($"speed:{instantSpeed} Темппература:{tnow}");
         }
 
         public void Info()
