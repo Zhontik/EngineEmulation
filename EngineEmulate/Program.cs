@@ -17,23 +17,12 @@ namespace EngineEmulate
                 0.01f,
                 0.0001f,
                 0.1f);
-            //engine.Info();
+            engine.Info();
 
-            TestStand Stand1 = new TestStand();
-            int result = Stand1.Start(Tstart, engine);
+            OverheatTestStand OverheatStand = new OverheatTestStand();
+            OverheatStand.StartEngineTesting(Tstart, engine);
 
-            if (result < 0)
-            {
-                Console.WriteLine("Двигатель не перегревается или его скорость перегрева критически мала.");
-            }
-            else if (result == 0)
-            {
-                Console.WriteLine($"Двигатель перегрет изначально.");
-            }
-            else
-            {
-                Console.WriteLine($"Двигатель перегревается через {result} сек.");
-            }
+            
 
             Console.ReadKey();
         }
