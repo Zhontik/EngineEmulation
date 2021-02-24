@@ -17,7 +17,7 @@ namespace EngineEmulate
                 0.01f,
                 0.0001f,
                 0.1f);
-            engine.Info();
+            //engine.Info();
 
             OverheatTestStand OverheatStand = new OverheatTestStand();
             OverheatStand.StartEngineTesting(Tstart, engine);
