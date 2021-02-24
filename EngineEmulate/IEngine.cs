@@ -6,7 +6,7 @@ namespace EngineEmulate
 {
     interface IEngine
     {
-        void Start();
+        void Start(int outTemperature);
 
         void Info();
     }
